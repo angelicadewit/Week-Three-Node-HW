@@ -18,7 +18,7 @@ app.get(`/`, function(req, res){
 })
 
 app.post(`/message`, function(req, res){
-    res.send(messages)
+
     console.log(req.body.text)
 
     messages.push({
@@ -36,6 +36,8 @@ app.get(`/message`, function(req, res){
 
 app.delete(`/message`, function(req, res){
     res.send(`DELETE request to homepage`)
+    
+    console.log(req.body.text)
 })
 
 

@@ -11,6 +11,7 @@ console.log("Hello World from app.js! \nChange this message, and make sure it ch
 var showMessagesOnDOM = function showMessagesOnDOM(messages) {
     // console.log(`here are your messages`, messages)
     var messageUL = document.querySelector("ul.messages");
+    var messagesOnDOM = [];
 
     messageUL.innerHTML = "";
 
@@ -26,10 +27,17 @@ var showMessagesOnDOM = function showMessagesOnDOM(messages) {
         var delButton = document.createElement("button");
         delButton.textContent = "delete";
         delButton.addEventListener("click", function (e) {
-            axios.delete("http://localhost:1337/message/").then(function (response) {
-                removeAMessage();
+            axios.delete("http://localhost:1337/message", {
+                index: messages.indexOf(message)
+            }).then(function (response) {
+                console.log(messages.indexOf(message));
+                console.log("server responded", response);
+                // removeAMessage(response)
             });
         });
+
+        messagesOnDOM.push(message);
+        console.log(messagesOnDOM);
 
         newMessage.appendChild(delButton);
         messageUL.appendChild(newMessage);
@@ -40,10 +48,6 @@ var messagesOnLoad = function messagesOnLoad() {
     axios.get("http://localhost:1337/message").then(function (response) {
         showMessagesOnDOM(response.data);
     });
-};
-
-var removeAMessage = function removeAMessage() {
-    console.log(messages);
 };
 
 // setInterval(function() {

@@ -13,6 +13,7 @@ to verify that you're working in the right files.`)
 let showMessagesOnDOM = function(messages){
     // console.log(`here are your messages`, messages)
     let messageUL = document.querySelector(`ul.messages`)
+    let messagesOnDOM = []
 
     messageUL.innerHTML = ``
 
@@ -28,14 +29,22 @@ let showMessagesOnDOM = function(messages){
         let delButton = document.createElement(`button`)
         delButton.textContent = `delete`
         delButton.addEventListener("click", function(e) {
-            axios.delete(`http://localhost:1337/message/`)
+            axios.delete(`http://localhost:1337/message`, {
+                index: messages.indexOf(message)
+            })
             .then(function(response) {
-                removeAMessage()
+                console.log(messages.indexOf(message))
+                console.log(`server responded`, response)
+                // removeAMessage(response)
             })
         })
 
+        messagesOnDOM.push(message)
+        console.log(messagesOnDOM)
+
         newMessage.appendChild(delButton)
         messageUL.appendChild(newMessage)
+
     })
 }
 
@@ -45,11 +54,6 @@ let messagesOnLoad = function(){
     showMessagesOnDOM(response.data)
     })
 }
-
-let removeAMessage = function(){
-    console.log(messages)
-}
-
 
 // setInterval(function() {
 //     axios.get(`http://localhost:1337/message`)
