@@ -24,23 +24,20 @@ let showMessagesOnDOM = function(messages){
     messages.forEach(function(message) {
         let newMessage = document.createElement(`li`)
 
-        newMessage.innerHTML = `${message.user} [${message.time}]: ${message.text} `
+        newMessage.innerHTML = `${message.user} [${moment(message.time).format(`M-DD [at] h:mm:ss a`)}]: ${message.text} `
 
         let delButton = document.createElement(`button`)
         delButton.textContent = `delete`
-        delButton.addEventListener("click", function(e) {
-            axios.delete(`http://localhost:1337/message`, {
-                index: messages.indexOf(message)
-            })
+        delButton.addEventListener(`click`, function(e) {
+            axios.delete(`http://localhost:1337/message`, { data: { id: messages.indexOf(message) }})
             .then(function(response) {
-                console.log(messages.indexOf(message))
+                let index = messages.indexOf(message)
                 console.log(`server responded`, response)
-                // removeAMessage(response)
+                messageUL.removeChild(messageUL.children[index])
             })
         })
 
         messagesOnDOM.push(message)
-        console.log(messagesOnDOM)
 
         newMessage.appendChild(delButton)
         messageUL.appendChild(newMessage)
@@ -49,19 +46,20 @@ let showMessagesOnDOM = function(messages){
 }
 
 let messagesOnLoad = function(){
-    axios.get(`http://localhost:1337/message`)
+    axios.get(`http://localhost:1337/message`, 
+    // { params: { id: time } }
+    )
     .then(function(response){
     showMessagesOnDOM(response.data)
     })
 }
 
-// setInterval(function() {
-//     axios.get(`http://localhost:1337/message`)
-//         .then(function(response){
-//         showMessagesOnDOM(response.data)
-//         console.log(`hell`)
-//     })
-// }, 500); 
+setInterval(function() {
+    axios.get(`http://localhost:1337/message`)
+        .then(function(response){
+        messagesOnLoad()
+    })
+}, 500); 
 
 let sendMessage = function(){
     let field = document.querySelector(`input[name="new-message"]`)
@@ -72,12 +70,11 @@ let sendMessage = function(){
         axios.post(`http://localhost:1337/message`,{
             user: username.value,
             text: field.value,
-            time: moment(new Date().getTime()).format(`M-DD [at] h:mm:ss a`),
+            time: new Date(),
         })
         .then(function(response) {
             field.value = ``
             console.log(`server responded`, response)
-
         })
         .catch(function(error) {
             console.log(`no message sent`)

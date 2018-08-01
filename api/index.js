@@ -36,9 +36,16 @@ app.get(`/message`, function(req, res){
 
 app.delete(`/message`, function(req, res){
     res.send(`DELETE request to homepage`)
+
+    messages.splice(req.body.id, 1)
     
-    console.log(req.body.text)
-})
+}) 
+
+app.param(`time`, function (req, res, next, time) {
+    console.log(`time`);
+    next();
+  });
+  
 
 
 app.listen(1337, function(){

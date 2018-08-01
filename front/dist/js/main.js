@@ -22,22 +22,19 @@ var showMessagesOnDOM = function showMessagesOnDOM(messages) {
     messages.forEach(function (message) {
         var newMessage = document.createElement("li");
 
-        newMessage.innerHTML = message.user + " [" + message.time + "]: " + message.text + " ";
+        newMessage.innerHTML = message.user + " [" + moment(message.time).format("M-DD [at] h:mm:ss a") + "]: " + message.text + " ";
 
         var delButton = document.createElement("button");
         delButton.textContent = "delete";
         delButton.addEventListener("click", function (e) {
-            axios.delete("http://localhost:1337/message", {
-                index: messages.indexOf(message)
-            }).then(function (response) {
-                console.log(messages.indexOf(message));
+            axios.delete("http://localhost:1337/message", { data: { id: messages.indexOf(message) } }).then(function (response) {
+                var index = messages.indexOf(message);
                 console.log("server responded", response);
-                // removeAMessage(response)
+                messageUL.removeChild(messageUL.children[index]);
             });
         });
 
         messagesOnDOM.push(message);
-        console.log(messagesOnDOM);
 
         newMessage.appendChild(delButton);
         messageUL.appendChild(newMessage);
@@ -45,18 +42,18 @@ var showMessagesOnDOM = function showMessagesOnDOM(messages) {
 };
 
 var messagesOnLoad = function messagesOnLoad() {
-    axios.get("http://localhost:1337/message").then(function (response) {
+    axios.get("http://localhost:1337/message"
+    // { params: { id: time } }
+    ).then(function (response) {
         showMessagesOnDOM(response.data);
     });
 };
 
-// setInterval(function() {
-//     axios.get(`http://localhost:1337/message`)
-//         .then(function(response){
-//         showMessagesOnDOM(response.data)
-//         console.log(`hell`)
-//     })
-// }, 500); 
+setInterval(function () {
+    axios.get("http://localhost:1337/message").then(function (response) {
+        messagesOnLoad();
+    });
+}, 500);
 
 var sendMessage = function sendMessage() {
     var field = document.querySelector("input[name=\"new-message\"]");
@@ -67,7 +64,7 @@ var sendMessage = function sendMessage() {
         axios.post("http://localhost:1337/message", {
             user: username.value,
             text: field.value,
-            time: moment(new Date().getTime()).format("M-DD [at] h:mm:ss a")
+            time: new Date()
         }).then(function (response) {
             field.value = "";
             console.log("server responded", response);
