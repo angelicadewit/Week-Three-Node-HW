@@ -34,8 +34,10 @@ app.get(`/message`, function(req, res){
     res.send(messages)
 })
 
+/* NEED TO HAVE A GET WITH A  */
+
 function mapping(req,res,next,Time){
-    console.log(req);
+    console.log(req.param);
     
     next();
 }
