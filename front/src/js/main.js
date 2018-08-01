@@ -54,12 +54,8 @@ let messagesOnLoad = function(){
     })
 }
 
-setInterval(function() {
-    axios.get(`http://localhost:1337/message`)
-        .then(function(response){
-        messagesOnLoad()
-    })
-}, 500); 
+setInterval(messagesOnLoad, 500); 
+
 
 let sendMessage = function(){
     let field = document.querySelector(`input[name="new-message"]`)
@@ -83,7 +79,7 @@ let sendMessage = function(){
 }
 
 
-messagesOnLoad()
+
 document.querySelector(`button.send`).addEventListener(`click`, sendMessage)
 document.querySelector(`input[name="new-message"]`).addEventListener(`keypress`, function (e) {
     if (e.key === `Enter`) {

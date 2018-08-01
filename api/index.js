@@ -34,6 +34,17 @@ app.get(`/message`, function(req, res){
     res.send(messages)
 })
 
+// app.route(`/message`)
+//   .get(function (req, res) {
+//     res.send('Get a message')
+//   })
+//   .post(function (req, res) {
+//     res.send('Add a message')
+//   })
+//   .put(function (req, res) {
+//     res.send('Update the message')
+//   })
+
 app.delete(`/message`, function(req, res){
     res.send(`DELETE request to homepage`)
 
@@ -41,10 +52,10 @@ app.delete(`/message`, function(req, res){
     
 }) 
 
-app.param(`time`, function (req, res, next, time) {
-    console.log(`time`);
-    next();
-  });
+// app.param(`time`, function (req, res, next, time) {
+//     console.log(`time`);
+//     next();
+//   });
   
 
 

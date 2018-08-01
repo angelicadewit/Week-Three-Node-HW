@@ -49,11 +49,7 @@ var messagesOnLoad = function messagesOnLoad() {
     });
 };
 
-setInterval(function () {
-    axios.get("http://localhost:1337/message").then(function (response) {
-        messagesOnLoad();
-    });
-}, 500);
+setInterval(messagesOnLoad, 500);
 
 var sendMessage = function sendMessage() {
     var field = document.querySelector("input[name=\"new-message\"]");
@@ -74,7 +70,6 @@ var sendMessage = function sendMessage() {
     }
 };
 
-messagesOnLoad();
 document.querySelector("button.send").addEventListener("click", sendMessage);
 document.querySelector("input[name=\"new-message\"]").addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
