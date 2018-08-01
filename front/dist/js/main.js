@@ -42,9 +42,7 @@ var showMessagesOnDOM = function showMessagesOnDOM(messages) {
 };
 
 var messagesOnLoad = function messagesOnLoad() {
-    axios.get("http://localhost:1337/message"
-    // { params: { id: time } }
-    ).then(function (response) {
+    axios.get("http://localhost:1337/message", { params: { time: new Date() } }).then(function (response) {
         showMessagesOnDOM(response.data);
     });
 };

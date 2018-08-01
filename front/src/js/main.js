@@ -47,7 +47,7 @@ let showMessagesOnDOM = function(messages){
 
 let messagesOnLoad = function(){
     axios.get(`http://localhost:1337/message`, 
-    // { params: { id: time } }
+    { params: { time: new Date() } }
     )
     .then(function(response){
     showMessagesOnDOM(response.data)
